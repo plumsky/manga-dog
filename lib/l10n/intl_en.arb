@@ -1,4 +1,6 @@
 {
   "@@locale": "en",
-  "what_to_do": "Type a path or file to read"
+  "what_to_do": "Type a path or file to read",
+  "recent_read": "Recent Reads",
+  "store_library": "Store Library"
 }

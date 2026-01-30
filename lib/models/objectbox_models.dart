@@ -3,7 +3,7 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class Manga {
   @Id()
-  int id = 0;  // ObjectBox使用0表示新对象
+  int id = 0;  // ObjectBox use 0 for now, will assign unique id later
 
   String title;
 
@@ -21,7 +21,7 @@ class Manga {
   String? description;
   String? author;
 
-  // 关系
+  // relationships
   final bookmarks = ToMany<Bookmark>();
   final translations = ToMany<TranslationCache>();
   final readingHistory = ToMany<ReadingHistory>();
@@ -46,17 +46,17 @@ class Bookmark {
   @Id()
   int id = 0;
 
-  String mangaId;
+  String mangaIdentifier;
   int pageNumber;
   String? note;
   DateTime createdAt;
   DateTime? updatedAt;
 
-  // 反向链接
+  // relationship
   final manga = ToOne<Manga>();
 
   Bookmark({
-    required this.mangaId,
+    required this.mangaIdentifier,
     required this.pageNumber,
     this.note,
     DateTime? createdAt,
@@ -79,7 +79,6 @@ class TranslationCache {
   DateTime? lastAccessed;
   int accessCount = 0;
 
-  // 反向链接
   final manga = ToOne<Manga>();
 
   TranslationCache({
@@ -97,16 +96,15 @@ class ReadingHistory {
   @Id()
   int id = 0;
 
-  String mangaId;
+  String mangaIdentifier;
   int pageNumber;
   DateTime readAt;
   int durationSeconds;
 
-  // 反向链接
   final manga = ToOne<Manga>();
 
   ReadingHistory({
-    required this.mangaId,
+    required this.mangaIdentifier,
     required this.pageNumber,
     required this.durationSeconds,
     DateTime? readAt,

@@ -1,4 +1,6 @@
 {
   "@@locale": "zh",
-  "what_to_do": "输入要读取的路径或文件"
+  "what_to_do": "输入要读取的路径或文件",
+  "recent_read": "最近阅读",
+  "store_library": "打开过的库"
 }

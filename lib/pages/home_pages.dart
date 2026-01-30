@@ -2,17 +2,26 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:manga_dog/models/objectbox_models.dart';
 import 'package:manga_dog/utils/app_logger.dart';
 import 'package:manga_dog/utils/files_sort_helper.dart';
 import 'package:manga_dog/utils/zip_image_cache_manager.dart';
+import 'package:manga_dog/widgets/reflected_widget.dart';
 
+import '../core/objectbox_database.dart';
 import '../generated/l10n.dart';
 import '../utils/file_system_utils.dart';
+import '../widgets/rounded_image.dart';
 import 'show_pictures.dart';
 
 class HomePages extends ConsumerWidget {
-  const HomePages({super.key});
+  HomePages({super.key});
+
+  late final ObjectBoxDatabase? _db;
+  late final DatabaseStats? _stats;
+  late final List<Manga>? _mangas;
+  late final List<Manga>? _recentMangas;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,6 +39,7 @@ class HomePages extends ConsumerWidget {
               Spacer(),
               Expanded(
                 child: TextField(
+                  style: TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     labelText: S.current.what_to_do,
                     border: OutlineInputBorder(
@@ -40,7 +50,7 @@ class HomePages extends ConsumerWidget {
                     final type = await FileSystemUtils.getPathType(value);
                     switch (type) {
                       case FileSystemEntityType.directory:
-                        _openPathToRead(context, path: value);
+                        _openPathToRead(context, ref, path: value);
                         break;
                       case FileSystemEntityType.file:
                         _openZipToRead(context, filePath: value);
@@ -60,32 +70,92 @@ class HomePages extends ConsumerWidget {
               ),
               IconButton(
                 onPressed: () {
-                  _openPathToRead(context);
+                  _openPathToRead(context, ref);
                 },
                 icon: Icon(Icons.drive_file_move_rounded, color: Colors.white),
               ),
               Spacer(),
             ],
           ),
+          SizedBox(height: 20),
+          Expanded(child: _buildRecentAndLibrarySection()),
         ],
       ),
     );
   }
 
+  Widget _buildRecentAndLibrarySection() {
+    return SingleChildScrollView(
+      child: FutureBuilder(
+        future: _initDateBase(),
+        builder: (context, data) {
+          if (data.connectionState != ConnectionState.done) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '⏰ ${S.current.recent_read} (${_stats?.mangaCount})',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              SizedBox(height: 20),
+              SizedBox(
+                height: 100,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return ReflectedWidget(child: RoundedImage(
+                      imageFile: File(_recentMangas?[index].coverPath ?? ''),
+                      height: 100,
+                    ));
+                  },
+                  separatorBuilder: (context, index) => SizedBox(width: 10),
+                  itemCount: _recentMangas?.length ?? 0,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Future<void> _initDateBase() async {
+    try {
+      _db = await ObjectBoxDatabase.getInstance();
+      _stats = await _db!.getStats();
+      _mangas = _db.mangaBox.getAll();
+      _recentMangas = await _db.getRecentlyOpenedManga();
+    } catch (e) {
+      AppLogger.error('Failed to initialize database: $e');
+      _db = null;
+      _stats = null;
+      _mangas = null;
+      _recentMangas = null;
+    }
+  }
+
   Future<void> _openZipToRead(BuildContext context, {String? filePath}) async {
-    FilePickerResult? result = filePath == null ? await FilePicker.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: [
-        'zip',
-        'tgz',
-        'tbz',
-        'tar',
-        'gz',
-        'gzip',
-        'bz2',
-        'bzip2',
-      ],
-    ): null;
+    FilePickerResult? result = filePath == null
+        ? await FilePicker.platform.pickFiles(
+            type: FileType.custom,
+            allowedExtensions: [
+              'zip',
+              'tgz',
+              'tbz',
+              'tar',
+              'gz',
+              'gzip',
+              'bz2',
+              'bzip2',
+            ],
+          )
+        : null;
     if (result == null && filePath == null) {
       // User canceled the picker
       AppLogger.warning('File picking canceled');
@@ -97,29 +167,41 @@ class HomePages extends ConsumerWidget {
       AppLogger.warning('No file selected');
       return;
     }
-    final zip = ZipImageCacheManager(filePath ?? (zipPaths?.first ?? ''));
+    final resultPath = filePath ?? (zipPaths?.first ?? '');
+    final zip = ZipImageCacheManager(resultPath);
     await zip.initialize();
     final imagePaths = zip.getImageFileNames();
-    final sortedFs = FilesSortHelper.sortFilesByName(
-      imagePaths,
-    );
+    final sortedFs = FilesSortHelper.sortFilesByName(imagePaths);
 
     if (!context.mounted) {
       return;
     }
+
+    final title = resultPath
+        .split(Platform.pathSeparator)
+        .last
+        .split('.')
+        .first;
+    _db?.addOrUpdateMangaByPath(
+      path: resultPath,
+      title: title,
+      totalPages: sortedFs.length,
+      coverPath: sortedFs.isNotEmpty ? sortedFs.first : '',
+    );
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ShowPictures(
-          imagePaths: sortedFs,
-          zip: zip,
-        ),
+        builder: (context) => ShowPictures(imagePaths: sortedFs, zip: zip),
       ),
     );
   }
 
-  Future<void> _openPathToRead(BuildContext context, {String? path}) async {
-    String? result = path ?? await FilePicker.getDirectoryPath();
+  Future<void> _openPathToRead(
+    BuildContext context,
+    WidgetRef ref, {
+    String? path,
+  }) async {
+    String? result = path ?? await FilePicker.platform.getDirectoryPath();
     if (result != null) {
       FileSystemUtils.getFilesInDirectory(result).then((files) {
         final fs = files.whereType<File>().toList();
@@ -128,12 +210,19 @@ class HomePages extends ConsumerWidget {
           return;
         }
 
+        final title = result.split(Platform.pathSeparator).last;
+        _db?.addOrUpdateMangaByPath(
+          path: result,
+          title: title,
+          totalPages: sortedFs.length,
+          coverPath: sortedFs.isNotEmpty ? sortedFs.first.path : '',
+        );
+
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ShowPictures(
-              imagePaths: sortedFs.map((e) => e.path).toList(),
-            ),
+            builder: (context) =>
+                ShowPictures(imagePaths: sortedFs.map((e) => e.path).toList()),
           ),
         );
       });

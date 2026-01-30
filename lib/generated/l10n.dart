@@ -64,6 +64,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Recent Reads`
+  String get recent_read {
+    return Intl.message(
+      'Recent Reads',
+      name: 'recent_read',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Store Library`
+  String get store_library {
+    return Intl.message(
+      'Store Library',
+      name: 'store_library',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

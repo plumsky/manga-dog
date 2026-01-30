@@ -22,6 +22,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+    "recent_read": MessageLookupByLibrary.simpleMessage("最近阅读"),
+    "store_library": MessageLookupByLibrary.simpleMessage("打开过的库"),
     "what_to_do": MessageLookupByLibrary.simpleMessage("输入要读取的路径或文件"),
   };
 }

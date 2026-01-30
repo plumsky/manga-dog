@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:objectbox/objectbox.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 import '../entities/app_setting.dart';
 import '../models/objectbox_models.dart';
-import 'objectbox_store.dart';
+import '../objectbox.g.dart';
 
 class ObjectBoxDatabase {
   late final Store _store;
@@ -28,8 +27,7 @@ class ObjectBoxDatabase {
 
   static Future<ObjectBoxDatabase> getInstance() async {
     if (_instance == null) {
-      final dir = await getApplicationDocumentsDirectory();
-      final dbPath = p.join(dir.path, 'manga_reader_objectbox');
+      String dbPath = await _getDBStoreFilePath();
 
       final store = await openStore(directory: dbPath);
       _instance = ObjectBoxDatabase._create(store);
@@ -38,11 +36,30 @@ class ObjectBoxDatabase {
     return _instance!;
   }
 
-  // 获取Box的getter
+  static Future<String> _getDBStoreFilePath() async {
+    Directory dir;
+    if (Platform.isMacOS) {
+      dir = await getApplicationSupportDirectory();
+    } else if (Platform.isWindows) {
+      dir = await getApplicationSupportDirectory();
+    } else if (Platform.isLinux) {
+      dir = await getApplicationSupportDirectory();
+    } else {
+      dir = await getApplicationDocumentsDirectory();
+    }
+    final dbPath = p.join(dir.path, 'manga_reader_objectbox');
+    return dbPath;
+  }
+
+  /// Accessors for boxes
   Box<Manga> get mangaBox => _mangaBox;
+
   Box<Bookmark> get bookmarkBox => _bookmarkBox;
+
   Box<TranslationCache> get translationCacheBox => _translationCacheBox;
+
   Box<ReadingHistory> get readingHistoryBox => _readingHistoryBox;
+
   Box<AppSetting> get appSettingsBox => _appSettingBox;
 
   Store get store => _store;
@@ -52,7 +69,7 @@ class ObjectBoxDatabase {
     _instance = null;
   }
 
-  // 清空所有数据（开发用）
+  /// Clear all data in the database
   Future<void> clearAll() async {
     await _store.runInTransaction(TxMode.write, () {
       _mangaBox.removeAll();
@@ -62,7 +79,7 @@ class ObjectBoxDatabase {
     });
   }
 
-  // 获取数据库统计信息
+  /// Get database statistics
   Future<DatabaseStats> getStats() async {
     return DatabaseStats(
       mangaCount: _mangaBox.count(),
@@ -74,15 +91,149 @@ class ObjectBoxDatabase {
   }
 
   Future<int> _getDatabaseSize() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final dbDir = p.join(dir.path, 'manga_reader_objectbox');
-    final dataFile = File(p.join(dbDir, 'data.mdb'));
+    final dbPath = await _getDBStoreFilePath();
+    final dataFile = File(p.join(dbPath, 'data.mdb'));
 
     if (await dataFile.exists()) {
       return await dataFile.length();
     }
 
     return 0;
+  }
+
+  /// Path or folderPath get manga
+  Future<Manga?> getMangaByPath(String path) async {
+    final query = _mangaBox.query(Manga_.folderPath.equals(path)).build();
+    try {
+      final result = query.findFirst();
+      return result;
+    } finally {
+      query.close();
+    }
+  }
+
+  /// Add or update manga by path
+  Future<Manga> addOrUpdateMangaByPath({
+    required String path,
+    required String title,
+    String? coverPath,
+    int? totalPages,
+    Map<String, dynamic>? metadata,
+  }) async {
+    return await _store.runInTransaction(TxMode.write, () async {
+      final query = _mangaBox.query(Manga_.folderPath.equals(path)).build();
+      try {
+        final existingManga = query.findFirst();
+
+        if (existingManga != null) {
+          existingManga.lastReadAt = DateTime.now();
+
+          if (coverPath != null) existingManga.coverPath = coverPath;
+          if (totalPages != null) existingManga.totalPages = totalPages;
+
+          _mangaBox.put(existingManga);
+          return existingManga;
+        } else {
+          /// Add new one
+          final newManga = Manga(
+            folderPath: path,
+            title: title,
+            coverPath: coverPath,
+            totalPages: totalPages,
+            lastReadAt: DateTime.now(),
+          );
+
+          final id = _mangaBox.put(newManga);
+          newManga.id = id;
+          return newManga;
+        }
+      } finally {
+        query.close();
+      }
+    });
+  }
+
+  /// Get or create manga by path
+  Future<Manga> getOrCreateManga({
+    required String path,
+    required String title,
+    String? coverPath,
+    int? totalPages,
+    Map<String, dynamic>? metadata,
+  }) async {
+    final existingManga = await getMangaByPath(path);
+
+    if (existingManga != null) {
+      existingManga.lastReadAt = DateTime.now();
+      _mangaBox.put(existingManga);
+      return existingManga;
+    }
+
+    return await addOrUpdateMangaByPath(
+      path: path,
+      title: title,
+      coverPath: coverPath,
+      totalPages: totalPages,
+      metadata: metadata,
+    );
+  }
+
+  /// Update manga last opened time by paths
+  Future<void> updateMangaLastOpened(List<String> paths) async {
+    await _store.runInTransaction(TxMode.write, () async {
+      final query = _mangaBox.query(Manga_.folderPath.oneOf(paths)).build();
+      try {
+        final mangas = query.find();
+        final now = DateTime.now();
+
+        for (final manga in mangas) {
+          manga.lastReadAt = now;
+        }
+
+        _mangaBox.putMany(mangas);
+      } finally {
+        query.close();
+      }
+    });
+  }
+
+  /// Remove manga by path
+  Future<bool> removeMangaByPath(String path) async {
+    final manga = await getMangaByPath(path);
+    if (manga != null) {
+      return _mangaBox.remove(manga.id);
+    }
+    return false;
+  }
+
+  /// Get recently opened manga
+  Future<List<Manga>> getRecentlyOpenedManga({
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final query = _mangaBox
+        .query()
+        .order(Manga_.lastReadAt, flags: Order.descending)
+        .build();
+
+    try {
+      final allResults = query.find();
+
+      final startIndex = offset;
+      final endIndex = offset + limit;
+
+      if (startIndex >= allResults.length) {
+        return [];
+      }
+
+      if (endIndex > allResults.length) {
+        return allResults.sublist(startIndex);
+      }
+
+      return allResults.sublist(startIndex, endIndex);
+    } finally {
+      query.close();
+    }
   }
 }
 

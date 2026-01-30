@@ -126,11 +126,249 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:8784750234000241707",
+      "lastPropertyId": "7:3021923298438726624",
+      "name": "Bookmark",
+      "properties": [
+        {
+          "id": "1:5113914932921392747",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6470031153726869157",
+          "name": "mangaIdentifier",
+          "type": 9
+        },
+        {
+          "id": "3:341285572432387781",
+          "name": "pageNumber",
+          "type": 6
+        },
+        {
+          "id": "4:3301490207579577636",
+          "name": "note",
+          "type": 9
+        },
+        {
+          "id": "5:5774520203902247123",
+          "name": "createdAt",
+          "type": 10
+        },
+        {
+          "id": "6:8772475333759666051",
+          "name": "updatedAt",
+          "type": 10
+        },
+        {
+          "id": "7:3021923298438726624",
+          "name": "mangaId",
+          "indexId": "1:8130671117215934630",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Manga"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "4:7058034151171372189",
+      "lastPropertyId": "12:6095420927315160396",
+      "name": "Manga",
+      "properties": [
+        {
+          "id": "1:8278036724748700015",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:8985483381686398970",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:8321710635427808202",
+          "name": "coverPath",
+          "type": 9
+        },
+        {
+          "id": "4:7155778733213924033",
+          "name": "folderPath",
+          "type": 9
+        },
+        {
+          "id": "5:6572057904544935906",
+          "name": "totalPages",
+          "type": 6
+        },
+        {
+          "id": "6:175547209066070243",
+          "name": "currentPage",
+          "type": 6
+        },
+        {
+          "id": "7:1881701124556848404",
+          "name": "readingProgress",
+          "type": 8
+        },
+        {
+          "id": "8:921606892374930251",
+          "name": "lastReadAt",
+          "type": 10
+        },
+        {
+          "id": "9:7337983334363815388",
+          "name": "tags",
+          "type": 30
+        },
+        {
+          "id": "10:1329602749707456127",
+          "name": "isFavorite",
+          "type": 1
+        },
+        {
+          "id": "11:5743941790265839658",
+          "name": "description",
+          "type": 9
+        },
+        {
+          "id": "12:6095420927315160396",
+          "name": "author",
+          "type": 9
+        }
+      ],
+      "relations": [
+        {
+          "id": "1:8364437206894227957",
+          "name": "bookmarks",
+          "targetId": "3:8784750234000241707"
+        },
+        {
+          "id": "2:5331440032858086137",
+          "name": "translations",
+          "targetId": "6:2415505355293907982"
+        },
+        {
+          "id": "3:2618619786474531426",
+          "name": "readingHistory",
+          "targetId": "5:2756448151672386326"
+        }
+      ]
+    },
+    {
+      "id": "5:2756448151672386326",
+      "lastPropertyId": "6:818331237378760767",
+      "name": "ReadingHistory",
+      "properties": [
+        {
+          "id": "1:8707930245181151796",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2611542829699584718",
+          "name": "mangaIdentifier",
+          "type": 9
+        },
+        {
+          "id": "3:4456972428266215033",
+          "name": "pageNumber",
+          "type": 6
+        },
+        {
+          "id": "4:8647009123097640214",
+          "name": "readAt",
+          "type": 10
+        },
+        {
+          "id": "5:6519815077044873764",
+          "name": "durationSeconds",
+          "type": 6
+        },
+        {
+          "id": "6:818331237378760767",
+          "name": "mangaId",
+          "indexId": "2:4543148024292211580",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Manga"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "6:2415505355293907982",
+      "lastPropertyId": "10:8227011584901208463",
+      "name": "TranslationCache",
+      "properties": [
+        {
+          "id": "1:801436872509394733",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:1373826601768737648",
+          "name": "imageHash",
+          "indexId": "3:7988622992771710728",
+          "type": 9,
+          "flags": 2048
+        },
+        {
+          "id": "3:8334799019871557704",
+          "name": "originalText",
+          "type": 9
+        },
+        {
+          "id": "4:6943737333775904059",
+          "name": "translatedText",
+          "type": 9
+        },
+        {
+          "id": "5:5186240354197041117",
+          "name": "sourceLang",
+          "type": 9
+        },
+        {
+          "id": "6:8062252942444290092",
+          "name": "targetLang",
+          "type": 9
+        },
+        {
+          "id": "7:5810117990124171127",
+          "name": "createdAt",
+          "type": 10
+        },
+        {
+          "id": "8:2831495359634083190",
+          "name": "lastAccessed",
+          "type": 10
+        },
+        {
+          "id": "9:1746520669864819281",
+          "name": "accessCount",
+          "type": 6
+        },
+        {
+          "id": "10:8227011584901208463",
+          "name": "mangaId",
+          "indexId": "4:8261290163231864429",
+          "type": 11,
+          "flags": 520,
+          "relationTarget": "Manga"
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:5121943618149718626",
-  "lastIndexId": "0:0",
-  "lastRelationId": "0:0",
+  "lastEntityId": "6:2415505355293907982",
+  "lastIndexId": "4:8261290163231864429",
+  "lastRelationId": "3:2618619786474531426",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,

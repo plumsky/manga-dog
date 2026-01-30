@@ -15,6 +15,7 @@ import 'package:objectbox/objectbox.dart' as obx;
 import 'package:objectbox_flutter_libs/objectbox_flutter_libs.dart';
 
 import 'entities/app_setting.dart';
+import 'models/objectbox_models.dart';
 
 export 'package:objectbox/objectbox.dart'; // so that callers only have to import this file
 
@@ -167,6 +168,282 @@ final _entities = <obx_int.ModelEntity>[
     relations: <obx_int.ModelRelation>[],
     backlinks: <obx_int.ModelBacklink>[],
   ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(3, 8784750234000241707),
+    name: 'Bookmark',
+    lastPropertyId: const obx_int.IdUid(7, 3021923298438726624),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 5113914932921392747),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 6470031153726869157),
+        name: 'mangaIdentifier',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 341285572432387781),
+        name: 'pageNumber',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 3301490207579577636),
+        name: 'note',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 5774520203902247123),
+        name: 'createdAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 8772475333759666051),
+        name: 'updatedAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 3021923298438726624),
+        name: 'mangaId',
+        type: 11,
+        flags: 520,
+        indexId: const obx_int.IdUid(1, 8130671117215934630),
+        relationField: 'manga',
+        relationTarget: 'Manga',
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(4, 7058034151171372189),
+    name: 'Manga',
+    lastPropertyId: const obx_int.IdUid(12, 6095420927315160396),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 8278036724748700015),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 8985483381686398970),
+        name: 'title',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 8321710635427808202),
+        name: 'coverPath',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 7155778733213924033),
+        name: 'folderPath',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 6572057904544935906),
+        name: 'totalPages',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 175547209066070243),
+        name: 'currentPage',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 1881701124556848404),
+        name: 'readingProgress',
+        type: 8,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 921606892374930251),
+        name: 'lastReadAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(9, 7337983334363815388),
+        name: 'tags',
+        type: 30,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 1329602749707456127),
+        name: 'isFavorite',
+        type: 1,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(11, 5743941790265839658),
+        name: 'description',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(12, 6095420927315160396),
+        name: 'author',
+        type: 9,
+        flags: 0,
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[
+      obx_int.ModelRelation(
+        id: const obx_int.IdUid(1, 8364437206894227957),
+        name: 'bookmarks',
+        targetId: const obx_int.IdUid(3, 8784750234000241707),
+      ),
+      obx_int.ModelRelation(
+        id: const obx_int.IdUid(2, 5331440032858086137),
+        name: 'translations',
+        targetId: const obx_int.IdUid(6, 2415505355293907982),
+      ),
+      obx_int.ModelRelation(
+        id: const obx_int.IdUid(3, 2618619786474531426),
+        name: 'readingHistory',
+        targetId: const obx_int.IdUid(5, 2756448151672386326),
+      ),
+    ],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(5, 2756448151672386326),
+    name: 'ReadingHistory',
+    lastPropertyId: const obx_int.IdUid(6, 818331237378760767),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 8707930245181151796),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 2611542829699584718),
+        name: 'mangaIdentifier',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 4456972428266215033),
+        name: 'pageNumber',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 8647009123097640214),
+        name: 'readAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 6519815077044873764),
+        name: 'durationSeconds',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 818331237378760767),
+        name: 'mangaId',
+        type: 11,
+        flags: 520,
+        indexId: const obx_int.IdUid(2, 4543148024292211580),
+        relationField: 'manga',
+        relationTarget: 'Manga',
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
+  obx_int.ModelEntity(
+    id: const obx_int.IdUid(6, 2415505355293907982),
+    name: 'TranslationCache',
+    lastPropertyId: const obx_int.IdUid(10, 8227011584901208463),
+    flags: 0,
+    properties: <obx_int.ModelProperty>[
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(1, 801436872509394733),
+        name: 'id',
+        type: 6,
+        flags: 1,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(2, 1373826601768737648),
+        name: 'imageHash',
+        type: 9,
+        flags: 2048,
+        indexId: const obx_int.IdUid(3, 7988622992771710728),
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(3, 8334799019871557704),
+        name: 'originalText',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(4, 6943737333775904059),
+        name: 'translatedText',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(5, 5186240354197041117),
+        name: 'sourceLang',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(6, 8062252942444290092),
+        name: 'targetLang',
+        type: 9,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(7, 5810117990124171127),
+        name: 'createdAt',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(8, 2831495359634083190),
+        name: 'lastAccessed',
+        type: 10,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(9, 1746520669864819281),
+        name: 'accessCount',
+        type: 6,
+        flags: 0,
+      ),
+      obx_int.ModelProperty(
+        id: const obx_int.IdUid(10, 8227011584901208463),
+        name: 'mangaId',
+        type: 11,
+        flags: 520,
+        indexId: const obx_int.IdUid(4, 8261290163231864429),
+        relationField: 'manga',
+        relationTarget: 'Manga',
+      ),
+    ],
+    relations: <obx_int.ModelRelation>[],
+    backlinks: <obx_int.ModelBacklink>[],
+  ),
 ];
 
 /// Shortcut for [obx.Store.new] that passes [getObjectBoxModel] and for Flutter
@@ -212,9 +489,9 @@ obx_int.ModelDefinition getObjectBoxModel() {
     // Typically, this is done with `dart run build_runner build`.
     generatorVersion: obx_int.GeneratorVersion.v2025_12_16,
     entities: _entities,
-    lastEntityId: const obx_int.IdUid(2, 5121943618149718626),
-    lastIndexId: const obx_int.IdUid(0, 0),
-    lastRelationId: const obx_int.IdUid(0, 0),
+    lastEntityId: const obx_int.IdUid(6, 2415505355293907982),
+    lastIndexId: const obx_int.IdUid(4, 8261290163231864429),
+    lastRelationId: const obx_int.IdUid(3, 2618619786474531426),
     lastSequenceId: const obx_int.IdUid(0, 0),
     retiredEntityUids: const [6478165685377947620],
     retiredIndexUids: const [],
@@ -419,6 +696,341 @@ obx_int.ModelDefinition getObjectBoxModel() {
         return object;
       },
     ),
+    Bookmark: obx_int.EntityDefinition<Bookmark>(
+      model: _entities[1],
+      toOneRelations: (Bookmark object) => [object.manga],
+      toManyRelations: (Bookmark object) => {},
+      getId: (Bookmark object) => object.id,
+      setId: (Bookmark object, int id) {
+        object.id = id;
+      },
+      objectToFB: (Bookmark object, fb.Builder fbb) {
+        final mangaIdentifierOffset = fbb.writeString(object.mangaIdentifier);
+        final noteOffset = object.note == null
+            ? null
+            : fbb.writeString(object.note!);
+        fbb.startTable(8);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, mangaIdentifierOffset);
+        fbb.addInt64(2, object.pageNumber);
+        fbb.addOffset(3, noteOffset);
+        fbb.addInt64(4, object.createdAt.millisecondsSinceEpoch);
+        fbb.addInt64(5, object.updatedAt?.millisecondsSinceEpoch);
+        fbb.addInt64(6, object.manga.targetId);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final updatedAtValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          14,
+        );
+        final mangaIdentifierParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final pageNumberParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          8,
+          0,
+        );
+        final noteParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 10);
+        final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0),
+        );
+        final object =
+            Bookmark(
+                mangaIdentifier: mangaIdentifierParam,
+                pageNumber: pageNumberParam,
+                note: noteParam,
+                createdAt: createdAtParam,
+              )
+              ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+              ..updatedAt = updatedAtValue == null
+                  ? null
+                  : DateTime.fromMillisecondsSinceEpoch(updatedAtValue);
+        object.manga.targetId = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          16,
+          0,
+        );
+        object.manga.attach(store);
+        return object;
+      },
+    ),
+    Manga: obx_int.EntityDefinition<Manga>(
+      model: _entities[2],
+      toOneRelations: (Manga object) => [],
+      toManyRelations: (Manga object) => {
+        obx_int.RelInfo<Manga>.toMany(1, object.id): object.bookmarks,
+        obx_int.RelInfo<Manga>.toMany(2, object.id): object.translations,
+        obx_int.RelInfo<Manga>.toMany(3, object.id): object.readingHistory,
+      },
+      getId: (Manga object) => object.id,
+      setId: (Manga object, int id) {
+        object.id = id;
+      },
+      objectToFB: (Manga object, fb.Builder fbb) {
+        final titleOffset = fbb.writeString(object.title);
+        final coverPathOffset = object.coverPath == null
+            ? null
+            : fbb.writeString(object.coverPath!);
+        final folderPathOffset = object.folderPath == null
+            ? null
+            : fbb.writeString(object.folderPath!);
+        final tagsOffset = fbb.writeList(
+          object.tags.map(fbb.writeString).toList(growable: false),
+        );
+        final descriptionOffset = object.description == null
+            ? null
+            : fbb.writeString(object.description!);
+        final authorOffset = object.author == null
+            ? null
+            : fbb.writeString(object.author!);
+        fbb.startTable(13);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, titleOffset);
+        fbb.addOffset(2, coverPathOffset);
+        fbb.addOffset(3, folderPathOffset);
+        fbb.addInt64(4, object.totalPages);
+        fbb.addInt64(5, object.currentPage);
+        fbb.addFloat64(6, object.readingProgress);
+        fbb.addInt64(7, object.lastReadAt?.millisecondsSinceEpoch);
+        fbb.addOffset(8, tagsOffset);
+        fbb.addBool(9, object.isFavorite);
+        fbb.addOffset(10, descriptionOffset);
+        fbb.addOffset(11, authorOffset);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final lastReadAtValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          18,
+        );
+        final titleParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final coverPathParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 8);
+        final folderPathParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 10);
+        final totalPagesParam = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          12,
+        );
+        final currentPageParam = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          14,
+        );
+        final readingProgressParam = const fb.Float64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          16,
+        );
+        final lastReadAtParam = lastReadAtValue == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(lastReadAtValue);
+        final tagsParam = const fb.ListReader<String>(
+          fb.StringReader(asciiOptimization: true),
+          lazy: false,
+        ).vTableGet(buffer, rootOffset, 20, []);
+        final isFavoriteParam = const fb.BoolReader().vTableGet(
+          buffer,
+          rootOffset,
+          22,
+          false,
+        );
+        final descriptionParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 24);
+        final authorParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGetNullable(buffer, rootOffset, 26);
+        final object = Manga(
+          title: titleParam,
+          coverPath: coverPathParam,
+          folderPath: folderPathParam,
+          totalPages: totalPagesParam,
+          currentPage: currentPageParam,
+          readingProgress: readingProgressParam,
+          lastReadAt: lastReadAtParam,
+          tags: tagsParam,
+          isFavorite: isFavoriteParam,
+          description: descriptionParam,
+          author: authorParam,
+        )..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+        obx_int.InternalToManyAccess.setRelInfo<Manga>(
+          object.bookmarks,
+          store,
+          obx_int.RelInfo<Manga>.toMany(1, object.id),
+        );
+        obx_int.InternalToManyAccess.setRelInfo<Manga>(
+          object.translations,
+          store,
+          obx_int.RelInfo<Manga>.toMany(2, object.id),
+        );
+        obx_int.InternalToManyAccess.setRelInfo<Manga>(
+          object.readingHistory,
+          store,
+          obx_int.RelInfo<Manga>.toMany(3, object.id),
+        );
+        return object;
+      },
+    ),
+    ReadingHistory: obx_int.EntityDefinition<ReadingHistory>(
+      model: _entities[3],
+      toOneRelations: (ReadingHistory object) => [object.manga],
+      toManyRelations: (ReadingHistory object) => {},
+      getId: (ReadingHistory object) => object.id,
+      setId: (ReadingHistory object, int id) {
+        object.id = id;
+      },
+      objectToFB: (ReadingHistory object, fb.Builder fbb) {
+        final mangaIdentifierOffset = fbb.writeString(object.mangaIdentifier);
+        fbb.startTable(7);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, mangaIdentifierOffset);
+        fbb.addInt64(2, object.pageNumber);
+        fbb.addInt64(3, object.readAt.millisecondsSinceEpoch);
+        fbb.addInt64(4, object.durationSeconds);
+        fbb.addInt64(5, object.manga.targetId);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final mangaIdentifierParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final pageNumberParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          8,
+          0,
+        );
+        final durationSecondsParam = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          12,
+          0,
+        );
+        final readAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0),
+        );
+        final object = ReadingHistory(
+          mangaIdentifier: mangaIdentifierParam,
+          pageNumber: pageNumberParam,
+          durationSeconds: durationSecondsParam,
+          readAt: readAtParam,
+        )..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
+        object.manga.targetId = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          14,
+          0,
+        );
+        object.manga.attach(store);
+        return object;
+      },
+    ),
+    TranslationCache: obx_int.EntityDefinition<TranslationCache>(
+      model: _entities[4],
+      toOneRelations: (TranslationCache object) => [object.manga],
+      toManyRelations: (TranslationCache object) => {},
+      getId: (TranslationCache object) => object.id,
+      setId: (TranslationCache object, int id) {
+        object.id = id;
+      },
+      objectToFB: (TranslationCache object, fb.Builder fbb) {
+        final imageHashOffset = fbb.writeString(object.imageHash);
+        final originalTextOffset = fbb.writeString(object.originalText);
+        final translatedTextOffset = fbb.writeString(object.translatedText);
+        final sourceLangOffset = fbb.writeString(object.sourceLang);
+        final targetLangOffset = fbb.writeString(object.targetLang);
+        fbb.startTable(11);
+        fbb.addInt64(0, object.id);
+        fbb.addOffset(1, imageHashOffset);
+        fbb.addOffset(2, originalTextOffset);
+        fbb.addOffset(3, translatedTextOffset);
+        fbb.addOffset(4, sourceLangOffset);
+        fbb.addOffset(5, targetLangOffset);
+        fbb.addInt64(6, object.createdAt.millisecondsSinceEpoch);
+        fbb.addInt64(7, object.lastAccessed?.millisecondsSinceEpoch);
+        fbb.addInt64(8, object.accessCount);
+        fbb.addInt64(9, object.manga.targetId);
+        fbb.finish(fbb.endTable());
+        return object.id;
+      },
+      objectFromFB: (obx.Store store, ByteData fbData) {
+        final buffer = fb.BufferContext(fbData);
+        final rootOffset = buffer.derefObject(0);
+        final lastAccessedValue = const fb.Int64Reader().vTableGetNullable(
+          buffer,
+          rootOffset,
+          18,
+        );
+        final imageHashParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 6, '');
+        final originalTextParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 8, '');
+        final translatedTextParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 10, '');
+        final sourceLangParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 12, '');
+        final targetLangParam = const fb.StringReader(
+          asciiOptimization: true,
+        ).vTableGet(buffer, rootOffset, 14, '');
+        final createdAtParam = DateTime.fromMillisecondsSinceEpoch(
+          const fb.Int64Reader().vTableGet(buffer, rootOffset, 16, 0),
+        );
+        final object =
+            TranslationCache(
+                imageHash: imageHashParam,
+                originalText: originalTextParam,
+                translatedText: translatedTextParam,
+                sourceLang: sourceLangParam,
+                targetLang: targetLangParam,
+                createdAt: createdAtParam,
+              )
+              ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0)
+              ..lastAccessed = lastAccessedValue == null
+                  ? null
+                  : DateTime.fromMillisecondsSinceEpoch(lastAccessedValue)
+              ..accessCount = const fb.Int64Reader().vTableGet(
+                buffer,
+                rootOffset,
+                20,
+                0,
+              );
+        object.manga.targetId = const fb.Int64Reader().vTableGet(
+          buffer,
+          rootOffset,
+          22,
+          0,
+        );
+        object.manga.attach(store);
+        return object;
+      },
+    ),
   };
 
   return obx_int.ModelDefinition(model, bindings);
@@ -539,5 +1151,205 @@ class AppSetting_ {
   /// See [AppSetting.updatedAt].
   static final updatedAt = obx.QueryDateProperty<AppSetting>(
     _entities[0].properties[22],
+  );
+}
+
+/// [Bookmark] entity fields to define ObjectBox queries.
+class Bookmark_ {
+  /// See [Bookmark.id].
+  static final id = obx.QueryIntegerProperty<Bookmark>(
+    _entities[1].properties[0],
+  );
+
+  /// See [Bookmark.mangaIdentifier].
+  static final mangaIdentifier = obx.QueryStringProperty<Bookmark>(
+    _entities[1].properties[1],
+  );
+
+  /// See [Bookmark.pageNumber].
+  static final pageNumber = obx.QueryIntegerProperty<Bookmark>(
+    _entities[1].properties[2],
+  );
+
+  /// See [Bookmark.note].
+  static final note = obx.QueryStringProperty<Bookmark>(
+    _entities[1].properties[3],
+  );
+
+  /// See [Bookmark.createdAt].
+  static final createdAt = obx.QueryDateProperty<Bookmark>(
+    _entities[1].properties[4],
+  );
+
+  /// See [Bookmark.updatedAt].
+  static final updatedAt = obx.QueryDateProperty<Bookmark>(
+    _entities[1].properties[5],
+  );
+
+  /// See [Bookmark.manga].
+  static final manga = obx.QueryRelationToOne<Bookmark, Manga>(
+    _entities[1].properties[6],
+  );
+}
+
+/// [Manga] entity fields to define ObjectBox queries.
+class Manga_ {
+  /// See [Manga.id].
+  static final id = obx.QueryIntegerProperty<Manga>(_entities[2].properties[0]);
+
+  /// See [Manga.title].
+  static final title = obx.QueryStringProperty<Manga>(
+    _entities[2].properties[1],
+  );
+
+  /// See [Manga.coverPath].
+  static final coverPath = obx.QueryStringProperty<Manga>(
+    _entities[2].properties[2],
+  );
+
+  /// See [Manga.folderPath].
+  static final folderPath = obx.QueryStringProperty<Manga>(
+    _entities[2].properties[3],
+  );
+
+  /// See [Manga.totalPages].
+  static final totalPages = obx.QueryIntegerProperty<Manga>(
+    _entities[2].properties[4],
+  );
+
+  /// See [Manga.currentPage].
+  static final currentPage = obx.QueryIntegerProperty<Manga>(
+    _entities[2].properties[5],
+  );
+
+  /// See [Manga.readingProgress].
+  static final readingProgress = obx.QueryDoubleProperty<Manga>(
+    _entities[2].properties[6],
+  );
+
+  /// See [Manga.lastReadAt].
+  static final lastReadAt = obx.QueryDateProperty<Manga>(
+    _entities[2].properties[7],
+  );
+
+  /// See [Manga.tags].
+  static final tags = obx.QueryStringVectorProperty<Manga>(
+    _entities[2].properties[8],
+  );
+
+  /// See [Manga.isFavorite].
+  static final isFavorite = obx.QueryBooleanProperty<Manga>(
+    _entities[2].properties[9],
+  );
+
+  /// See [Manga.description].
+  static final description = obx.QueryStringProperty<Manga>(
+    _entities[2].properties[10],
+  );
+
+  /// See [Manga.author].
+  static final author = obx.QueryStringProperty<Manga>(
+    _entities[2].properties[11],
+  );
+
+  /// see [Manga.bookmarks]
+  static final bookmarks = obx.QueryRelationToMany<Manga, Bookmark>(
+    _entities[2].relations[0],
+  );
+
+  /// see [Manga.translations]
+  static final translations = obx.QueryRelationToMany<Manga, TranslationCache>(
+    _entities[2].relations[1],
+  );
+
+  /// see [Manga.readingHistory]
+  static final readingHistory = obx.QueryRelationToMany<Manga, ReadingHistory>(
+    _entities[2].relations[2],
+  );
+}
+
+/// [ReadingHistory] entity fields to define ObjectBox queries.
+class ReadingHistory_ {
+  /// See [ReadingHistory.id].
+  static final id = obx.QueryIntegerProperty<ReadingHistory>(
+    _entities[3].properties[0],
+  );
+
+  /// See [ReadingHistory.mangaIdentifier].
+  static final mangaIdentifier = obx.QueryStringProperty<ReadingHistory>(
+    _entities[3].properties[1],
+  );
+
+  /// See [ReadingHistory.pageNumber].
+  static final pageNumber = obx.QueryIntegerProperty<ReadingHistory>(
+    _entities[3].properties[2],
+  );
+
+  /// See [ReadingHistory.readAt].
+  static final readAt = obx.QueryDateProperty<ReadingHistory>(
+    _entities[3].properties[3],
+  );
+
+  /// See [ReadingHistory.durationSeconds].
+  static final durationSeconds = obx.QueryIntegerProperty<ReadingHistory>(
+    _entities[3].properties[4],
+  );
+
+  /// See [ReadingHistory.manga].
+  static final manga = obx.QueryRelationToOne<ReadingHistory, Manga>(
+    _entities[3].properties[5],
+  );
+}
+
+/// [TranslationCache] entity fields to define ObjectBox queries.
+class TranslationCache_ {
+  /// See [TranslationCache.id].
+  static final id = obx.QueryIntegerProperty<TranslationCache>(
+    _entities[4].properties[0],
+  );
+
+  /// See [TranslationCache.imageHash].
+  static final imageHash = obx.QueryStringProperty<TranslationCache>(
+    _entities[4].properties[1],
+  );
+
+  /// See [TranslationCache.originalText].
+  static final originalText = obx.QueryStringProperty<TranslationCache>(
+    _entities[4].properties[2],
+  );
+
+  /// See [TranslationCache.translatedText].
+  static final translatedText = obx.QueryStringProperty<TranslationCache>(
+    _entities[4].properties[3],
+  );
+
+  /// See [TranslationCache.sourceLang].
+  static final sourceLang = obx.QueryStringProperty<TranslationCache>(
+    _entities[4].properties[4],
+  );
+
+  /// See [TranslationCache.targetLang].
+  static final targetLang = obx.QueryStringProperty<TranslationCache>(
+    _entities[4].properties[5],
+  );
+
+  /// See [TranslationCache.createdAt].
+  static final createdAt = obx.QueryDateProperty<TranslationCache>(
+    _entities[4].properties[6],
+  );
+
+  /// See [TranslationCache.lastAccessed].
+  static final lastAccessed = obx.QueryDateProperty<TranslationCache>(
+    _entities[4].properties[7],
+  );
+
+  /// See [TranslationCache.accessCount].
+  static final accessCount = obx.QueryIntegerProperty<TranslationCache>(
+    _entities[4].properties[8],
+  );
+
+  /// See [TranslationCache.manga].
+  static final manga = obx.QueryRelationToOne<TranslationCache, Manga>(
+    _entities[4].properties[9],
   );
 }

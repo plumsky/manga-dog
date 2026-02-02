@@ -19,14 +19,13 @@ final translationCacheBoxProvider = FutureProvider<Box<TranslationCache>>((ref) 
   return db.translationCacheBox;
 });
 
-// 用于实时查询的Provider
-// final mangaQueryProvider = StreamProvider<List<Manga>>((ref) async* {
-//   final db = await ref.watch(objectBoxDatabaseProvider.future);
-//   final query = db.mangaBox.query()
-//       .order(Manga_.lastReadAt, flags: Order.descending)
-//       .build();
-//
-//   yield* query
-//       .watch(triggerImmediately: true)
-//       .map((query) => query.find());
-// });
+final recentManagerProvider = FutureProvider<List<Manga>>((ref) async {
+  final db = await ref.read(objectBoxDatabaseProvider.future);
+  final allMangas = db.mangaBox.getAll();
+  return allMangas.take(10).toList();
+});
+
+final databaseStatsProvider = FutureProvider<DatabaseStats>((ref) async {
+  final db = await ref.read(objectBoxDatabaseProvider.future);
+  return await db.getStats();
+});

@@ -120,37 +120,36 @@ class ObjectBoxDatabase {
     int? totalPages,
     Map<String, dynamic>? metadata,
   }) async {
-    return await _store.runInTransaction(TxMode.write, () async {
-      final query = _mangaBox.query(Manga_.folderPath.equals(path)).build();
-      try {
-        final existingManga = query.findFirst();
+    final query = _mangaBox.query(Manga_.folderPath.equals(path)).build();
 
-        if (existingManga != null) {
-          existingManga.lastReadAt = DateTime.now();
+    try {
+      final existingManga = query.findFirst();
+      Manga mangaToSave;
 
-          if (coverPath != null) existingManga.coverPath = coverPath;
-          if (totalPages != null) existingManga.totalPages = totalPages;
-
-          _mangaBox.put(existingManga);
-          return existingManga;
-        } else {
-          /// Add new one
-          final newManga = Manga(
-            folderPath: path,
-            title: title,
-            coverPath: coverPath,
-            totalPages: totalPages,
-            lastReadAt: DateTime.now(),
-          );
-
-          final id = _mangaBox.put(newManga);
-          newManga.id = id;
-          return newManga;
-        }
-      } finally {
-        query.close();
+      if (existingManga != null) {
+        existingManga.lastReadAt = DateTime.now();
+        if (coverPath != null) existingManga.coverPath = coverPath;
+        if (totalPages != null) existingManga.totalPages = totalPages;
+        mangaToSave = existingManga;
+      } else {
+        mangaToSave = Manga(
+          folderPath: path,
+          title: title,
+          coverPath: coverPath,
+          totalPages: totalPages,
+          lastReadAt: DateTime.now(),
+        );
       }
-    });
+
+      final id = _store.runInTransaction(TxMode.write, () {
+        return _mangaBox.put(mangaToSave);
+      });
+
+      mangaToSave.id = id;
+      return mangaToSave;
+    } finally {
+      query.close();
+    }
   }
 
   /// Get or create manga by path

@@ -10,7 +10,7 @@ class KeyboardManager {
   final List<String> _keyHistory = [];
   static const int maxHistory = 50;
 
-  // 注册快捷键
+  /// register a keyboard shortcut
   void registerShortcut({
     required String id,
     required List<LogicalKeyboardKey> keys,
@@ -26,7 +26,7 @@ class KeyboardManager {
     );
   }
 
-  // 注册按键事件
+  /// register key event handlers
   void registerKeyEvent({
     required LogicalKeyboardKey key,
     VoidCallback? onDown,
@@ -41,36 +41,36 @@ class KeyboardManager {
     }
   }
 
-  // 处理键盘事件
+  /// handle key events
   void handleKeyEvent(KeyEvent event) {
     final key = event.logicalKey;
     final time = DateTime.now();
 
     if (event is KeyDownEvent) {
       _pressedKeys.add(key);
-      _addToHistory('按下: ${key.keyLabel}', time);
+      _addToHistory('Check: ${key.keyLabel}', time);
 
-      // 处理按键按下事件
+      /// process key down event
       _keyDownHandlers[key]?.forEach((handler) => handler());
 
-      // 检查快捷键
+      /// check for hold event
       _checkShortcuts();
 
     } else if (event is KeyUpEvent) {
       _pressedKeys.remove(key);
-      _addToHistory('释放: ${key.keyLabel}', time);
+      _addToHistory('Release: ${key.keyLabel}', time);
 
-      // 处理按键释放事件
+      /// process key up event
       _keyUpHandlers[key]?.forEach((handler) => handler());
 
-      // 取消长按计时
+      /// cancel hold timer
       _holdTimer?.cancel();
     }
   }
 
-  // 检查快捷键是否匹配
+  /// check if the current pressed keys match the shortcut
   bool _matchesShortcut(List<LogicalKeyboardKey> shortcutKeys) {
-    // 检查所有快捷键键是否都被按下
+    /// check if all keys in the shortcut are pressed
     for (var key in shortcutKeys) {
       if (!_isKeyPressed(key)) {
         return false;
@@ -80,9 +80,9 @@ class KeyboardManager {
     return true;
   }
 
-  // 检查单个键是否被按下
+  /// check if a key is currently pressed
   bool _isKeyPressed(LogicalKeyboardKey key) {
-    // 处理修饰键
+    /// modifier key
     if (key == LogicalKeyboardKey.control ||
         key == LogicalKeyboardKey.controlLeft ||
         key == LogicalKeyboardKey.controlRight) {
@@ -101,21 +101,21 @@ class KeyboardManager {
       return HardwareKeyboard.instance.isMetaPressed;
     }
 
-    // 处理普通键
+    /// normal key
     return _pressedKeys.contains(key);
   }
 
-  // 检查所有快捷键
+  /// check and trigger shortcuts
   void _checkShortcuts() {
     for (var binding in _shortcuts.values) {
       if (_matchesShortcut(binding.keys)) {
         binding.callback();
-        break; // 只触发一个快捷键
+        break;
       }
     }
   }
 
-  // 添加快捷键历史
+  /// add action to history
   void _addToHistory(String action, DateTime time) {
     final entry = '${time.toString().substring(11, 19)} - $action';
     _keyHistory.insert(0, entry);
@@ -124,16 +124,16 @@ class KeyboardManager {
     }
   }
 
-  // 获取按键历史
+  /// get key history
   List<String> getKeyHistory() => List.from(_keyHistory);
 
-  // 获取当前按下的键
+  /// get currently pressed keys
   List<LogicalKeyboardKey> getPressedKeys() => List.from(_pressedKeys);
 
-  // 获取所有注册的快捷键
+  /// get registered shortcuts
   Map<String, ShortcutBinding> get shortcuts => Map.from(_shortcuts);
 
-  // 清空所有注册
+  /// clear all registered shortcuts and handlers
   void clear() {
     _shortcuts.clear();
     _keyDownHandlers.clear();
@@ -145,6 +145,11 @@ class KeyboardManager {
 
   void dispose() {
     clear();
+  }
+
+  void unregisterKeyEvent(LogicalKeyboardKey arrowRight) {
+    _keyDownHandlers.remove(arrowRight);
+    _keyUpHandlers.remove(arrowRight);
   }
 }
 

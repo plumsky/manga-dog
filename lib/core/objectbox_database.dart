@@ -29,7 +29,10 @@ class ObjectBoxDatabase {
     if (_instance == null) {
       String dbPath = await _getDBStoreFilePath();
 
-      final store = await openStore(directory: dbPath);
+      final store = await openStore(
+        directory: dbPath,
+        macosApplicationGroup: 'manga.dog.db',
+      );
       _instance = ObjectBoxDatabase._create(store);
     }
 

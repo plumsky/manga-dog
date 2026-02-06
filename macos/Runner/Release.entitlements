@@ -4,5 +4,9 @@
 <dict>
 	<key>com.apple.security.files.all</key>
 	<true/>
+	<key>com.apple.security.application-groups</key>
+          <array>
+            <string>manga.dog.db</string>
+          </array>
 </dict>
 </plist>

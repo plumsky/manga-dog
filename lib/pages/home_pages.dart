@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:manga_dog/utils/app_logger.dart';
 import 'package:manga_dog/utils/files_sort_helper.dart';
 import 'package:manga_dog/utils/zip_image_cache_manager.dart';
+import 'package:manga_dog/widgets/loading_widget.dart';
 import 'package:manga_dog/widgets/reflected_widget.dart';
 
 import '../generated/l10n.dart';
@@ -35,7 +36,7 @@ class HomePages extends ConsumerWidget {
           Expanded(
             child: databaseAsync.when(
               loading: () =>
-                  Center(child: CircularProgressIndicator(color: Colors.white)),
+                  Center(child: LoadingWidget(width: 300, height: 300)),
               error: (error, stack) => Center(
                 child: Text(
                   'init data failed: $error',
@@ -143,7 +144,7 @@ class HomePages extends ConsumerWidget {
             error: (error, stack) =>
                 Text('error', style: TextStyle(color: Colors.red)),
             loading: () =>
-                Center(child: CircularProgressIndicator(color: Colors.white)),
+                Center(child: LoadingWidget()),
           ),
         ],
       ),

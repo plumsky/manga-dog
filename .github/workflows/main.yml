@@ -32,14 +32,14 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Get dependencies
+        run: flutter pub get
+
       - name: Install macOS dependencies (if any)
         if: matrix.os == 'macos-latest'
         run: |
           cd macos
           pod install
-
-      - name: Get dependencies
-        run: flutter pub get
 
       - name: Build Application
         run: ${{ matrix.build-command }}

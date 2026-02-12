@@ -2,13 +2,16 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:manga_dog/utils/app_logger.dart';
+import 'package:manga_dog/utils/keyboard_manager.dart';
 import 'package:manga_dog/utils/zip_image_cache_manager.dart';
 import 'package:photo_view/photo_view.dart';
 
 import '../widgets/auto_hide_widget.dart';
+import '../widgets/loading_widget.dart';
 import '../widgets/rounded_image.dart';
 
 class ShowPictures extends HookConsumerWidget {
@@ -38,15 +41,18 @@ class ShowPictures extends HookConsumerWidget {
           scrollIndex.value = current;
         }
       });
-      return null;
+      _initKeyActions(imagePaths.length, selectedIndex);
+      return () {
+        KeyboardManager().unregisterKeyEvent(LogicalKeyboardKey.arrowRight);
+        KeyboardManager().unregisterKeyEvent(LogicalKeyboardKey.arrowLeft);
+      };
     }, []);
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          Expanded(
-            child: _buildViewerWidget(selectedIndex, visible)
-          ),
+          Expanded(child: _buildViewerWidget(selectedIndex, visible)),
           Visibility(
             visible: visible.value,
             maintainState: true,
@@ -58,27 +64,29 @@ class ShowPictures extends HookConsumerWidget {
                 height: height,
                 child: Column(
                   children: [
-                    Row(children: [
-                      Spacer(),
-                      Text(
-                        '${scrollIndex.value + 1}',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                      SizedBox(width: 8,),
-                      Expanded(
-                        child: LinearProgressIndicator(
-                          value: scrollIndex.value / (imagePaths.length - 1),
-                          color: Colors.white,
-                          backgroundColor: Colors.grey,
+                    Row(
+                      children: [
+                        Spacer(),
+                        Text(
+                          '${scrollIndex.value + 1}',
+                          style: TextStyle(color: Colors.white, fontSize: 12),
                         ),
-                      ),
-                      SizedBox(width: 8,),
-                      Text(
-                        '${imagePaths.length}',
-                        style: TextStyle(color: Colors.white, fontSize: 12),
-                      ),
-                      Spacer()
-                    ]),
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: LinearProgressIndicator(
+                            value: scrollIndex.value / (imagePaths.length - 1),
+                            color: Colors.white,
+                            backgroundColor: Colors.grey,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Text(
+                          '${imagePaths.length}',
+                          style: TextStyle(color: Colors.white, fontSize: 12),
+                        ),
+                        Spacer(),
+                      ],
+                    ),
                     SizedBox(height: 8),
                     Expanded(
                       child: Stack(
@@ -136,40 +144,44 @@ class ShowPictures extends HookConsumerWidget {
         } else {
           return RoundedImage(
             height: height,
-            placeholder: Center(child: CircularProgressIndicator()),
+            placeholder: Center(child: LoadingWidget()),
           );
         }
       },
     );
   }
-  
-  void _onScaleChangedEvent(PhotoViewScaleState scale, ValueNotifier<bool> visible) {
+
+  void _onScaleChangedEvent(
+    PhotoViewScaleState scale,
+    ValueNotifier<bool> visible,
+  ) {
     AppLogger.debug('Scale changed: $scale');
     visible.value = (scale == PhotoViewScaleState.initial);
   }
 
-  Widget _buildViewerWidget(ValueNotifier<int> selectedIndex, ValueNotifier<bool> visible) {
+  Widget _buildViewerWidget(
+    ValueNotifier<int> selectedIndex,
+    ValueNotifier<bool> visible,
+  ) {
     return Stack(
       alignment: AlignmentGeometry.topCenter,
       children: [
         zip == null
             ? PhotoView(
-          scaleStateChangedCallback: (scale) {
-            _onScaleChangedEvent(scale, visible);
-          },
-          imageProvider: FileImage(
-            File(imagePaths[selectedIndex.value]),
-          ),
-        )
+                scaleStateChangedCallback: (scale) {
+                  _onScaleChangedEvent(scale, visible);
+                },
+                imageProvider: FileImage(File(imagePaths[selectedIndex.value])),
+              )
             : FutureBuilder(
-          future: zip!.getImageData(imagePaths[selectedIndex.value]),
-          builder: (context, data) {
-            return data.connectionState == ConnectionState.done &&
-                data.hasData
-                ? PhotoView(imageProvider: MemoryImage(data.data!))
-                : Center(child: CircularProgressIndicator());
-          },
-        ),
+                future: zip!.getImageData(imagePaths[selectedIndex.value]),
+                builder: (context, data) {
+                  return data.connectionState == ConnectionState.done &&
+                          data.hasData
+                      ? PhotoView(imageProvider: MemoryImage(data.data!))
+                      : Center(child: LoadingWidget());
+                },
+              ),
         Positioned(
           top: 40,
           child: IgnorePointer(
@@ -192,12 +204,16 @@ class ShowPictures extends HookConsumerWidget {
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
 
-  Widget _buildImagesListWidget(ValueNotifier<int> selectedIndex, double height, double width) {
+  Widget _buildImagesListWidget(
+    ValueNotifier<int> selectedIndex,
+    double height,
+    double width,
+  ) {
     return ListView.separated(
       scrollDirection: Axis.horizontal,
       controller: _controller,
@@ -209,10 +225,7 @@ class ShowPictures extends HookConsumerWidget {
             _widgetKeyPage.currentState?.show();
           },
           child: zip == null
-              ? RoundedImage(
-                  imageFile: File(imagePaths[index]),
-                  height: height,
-                )
+              ? RoundedImage(imageFile: File(imagePaths[index]), height: height)
               : _buildZipThumbnail(imagePaths[index], height),
         );
       },
@@ -220,6 +233,26 @@ class ShowPictures extends HookConsumerWidget {
         return SizedBox(width: 8);
       },
       itemCount: imagePaths.length,
+    );
+  }
+
+  void _initKeyActions(int maxIndex, ValueNotifier<int> selectedIndex) {
+    KeyboardManager().registerKeyEvent(
+      key: LogicalKeyboardKey.arrowRight,
+      onUp: () {
+        if (selectedIndex.value < maxIndex) {
+          selectedIndex.value += 1;
+        }
+      },
+    );
+
+    KeyboardManager().registerKeyEvent(
+      key: LogicalKeyboardKey.arrowLeft,
+      onUp: () {
+        if (selectedIndex.value > 0) {
+          selectedIndex.value -= 1;
+        }
+      },
     );
   }
 }

@@ -1,4 +1,4 @@
-name: Flutter Windows Build
+name: Flutter Multi-Platform Build
 
 on:
   push:
@@ -7,8 +7,22 @@ on:
     branches: [ main ]
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build:
+    name: Build on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            build-command: flutter build windows --release
+            artifact-path: build/windows/x64/runner/Release/
+            artifact-name: windows-build
+
+          - os: macos-latest
+            build-command: flutter build macos --release
+            artifact-path: build/macos/Build/Products/Release/
+            artifact-name: macos-build
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -18,16 +32,22 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Install macOS dependencies (if any)
+        if: matrix.os == 'macos-latest'
+        run: |
+          cd macos
+          pod install
+
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build Windows Executable
-        run: flutter build windows --release
-        # run: flutter build windows --release --no-tree-shake-icons
+      - name: Build Application
+        run: ${{ matrix.build-command }}
+        # run: --no-tree-shake-icons if you have any failed.
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: windows-build
-          path: build/windows/x64/runner/Release/
+          name: ${{ matrix.artifact-name }}
+          path: ${{ matrix.artifact-path }}
           retention-days: 7

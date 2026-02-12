@@ -133,7 +133,7 @@ class HomePages extends ConsumerWidget {
                   return ReflectedWidget(
                     child: RoundedImage(
                       imageFile: File(recentMangas[index].coverPath ?? ''),
-                      height: 100,
+                      height: 100 * 0.7,
                     ),
                   );
                 },
